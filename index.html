@@ -55,9 +55,13 @@
             //image layering starts from bottom up. BG typically is on top.
             this.add.image(400, 300, 'sky');
 
+            //Creates new static physics group and assigns it to local variable 'platforms'
             platforms = this.physics.add.staticGroup();
 
+            //Physics group automatically creates physics enabled children using handy helper functions like 'create'
+            
             platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+            // The first line of code above adds a new ground image at 400 x 568 (remember, images are positioned based on their center) - the problem is that we need this platform to span the full width of our game, otherwise the player will just drop off the sides. To do that we scale it x2 with the function setScale(2). It's now 800 x 64 in size, which is perfect for our needs. The call to refreshBody() is required because we have scaled a static physics body, so we have to tell the physics world about the changes we made.
 
             platforms.create(600, 400, 'ground');
             platforms.create(50, 250, 'ground');
