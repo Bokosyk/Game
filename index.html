@@ -36,7 +36,9 @@
         };
 
         var player;
+        var stars;
         var platforms;
+        var cursors;
 
         var game = new Phaser.Game(config);
 
@@ -103,31 +105,51 @@
             //Built in keyboard manager for Phaser. Populates the cursors object with four properties: up, down, left, right. Then all we need to do is poll these in our 'update' loop down below.
             cursors = this.input.keyboard.createCursorKeys();
 
+            //setXY - this is used to set the position of the 12 children the Group creates. Each child will be placed starting at x: 12, y: 0 and with an x step of 70. This means that the first child will be positioned at 12 x 0, the second one is 70 pixels on from that at 82 x 0, the third one is at 152 x 0, and so on. The 'step' values are a really handy way of spacing out a Groups children during creation. The value of 70 is chosen because it means all 12 children will be perfectly spaced out across the screen.
+            stars = this.physics.add.group({
+                key: 'star',
+                repeat: 11,
+                setXY: { x: 12, y: 0, stepX: 70 }
+            });
+
+            //iterates all children in the Group and gives them a random Y bounce value between 0.4 and 0.8
+            stars.children.iterate(function (child) {
+
+                child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+            });
+
             // In order to allow the player to collide with the platforms we can create a Collider object. This object monitors two physics objects (which can include Groups) and checks for collisions or overlap between them. If that occurs it can then optionally invoke your own callback, but for the sake of just colliding with platforms we don't require that:
             this.physics.add.collider(player, platforms);
+            //Adds star collision against platforms
+            this.physics.add.collider(stars, platforms);
+            //Checks for overlap with star and runs collectStar()
+            this.physics.add.overlap(player, stars, collectStar, null, this);
         }
 
         function update() {
-            if (cursors.left.isDown)
-            {
+            if (cursors.left.isDown) {
                 player.setVelocityX(-160);
                 player.anims.play('left', true);
             }
-            else if (cursors.right.isDown)
-            {
+            else if (cursors.right.isDown) {
                 player.setVelocityX(160);
                 player.anims.play('right', true);
             }
-            else
-            {
+            else {
                 player.setVelocityX(0);
                 player.anims.play('turn');
             }
 
-            if (cursors.up.isDown && player.body.touching.down)
-            {
+            if (cursors.up.isDown && player.body.touching.down) {
                 player.setVelocityY(-330);
             }
+        }
+
+        //This tells Phaser to check for an overlap between the player and any star in the stars Group. If found then they are passed to the 'collectStar' function:
+        function collectStar (player, star)
+        {
+            star.disableBody(true, true);
         }
 
     </script>
