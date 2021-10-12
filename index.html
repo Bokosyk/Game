@@ -155,7 +155,11 @@
         //This tells Phaser to check for an overlap between the player and any star in the stars Group. If found then they are passed to the 'collectStar' function:
         function collectStar (player, star)
         {
-            star.disableBody(true, true);
+            star.disableBody(true, true); //disables star texture/star physics
+
+            //10 points are added for every star and the scoreText is updated to show this new total.
+            score += 10;
+            scoreText.setText('Score: ' + score)
         }
 
     </script>
