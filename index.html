@@ -100,11 +100,34 @@
                 repeat: -1
             });
 
+            //Built in keyboard manager for Phaser. Populates the cursors object with four properties: up, down, left, right. Then all we need to do is poll these in our 'update' loop down below.
+            cursors = this.input.keyboard.createCursorKeys();
+
             // In order to allow the player to collide with the platforms we can create a Collider object. This object monitors two physics objects (which can include Groups) and checks for collisions or overlap between them. If that occurs it can then optionally invoke your own callback, but for the sake of just colliding with platforms we don't require that:
             this.physics.add.collider(player, platforms);
         }
 
         function update() {
+            if (cursors.left.isDown)
+            {
+                player.setVelocityX(-160);
+                player.anims.play('left', true);
+            }
+            else if (cursors.right.isDown)
+            {
+                player.setVelocityX(160);
+                player.anims.play('right', true);
+            }
+            else
+            {
+                player.setVelocityX(0);
+                player.anims.play('turn');
+            }
+
+            if (cursors.up.isDown && player.body.touching.down)
+            {
+                player.setVelocityY(-330);
+            }
         }
 
     </script>
