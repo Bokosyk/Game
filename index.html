@@ -99,6 +99,9 @@
                 frameRate: 10,
                 repeat: -1
             });
+
+            // In order to allow the player to collide with the platforms we can create a Collider object. This object monitors two physics objects (which can include Groups) and checks for collisions or overlap between them. If that occurs it can then optionally invoke your own callback, but for the sake of just colliding with platforms we don't require that:
+            this.physics.add.collider(player, platforms);
         }
 
         function update() {
