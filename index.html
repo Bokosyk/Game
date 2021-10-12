@@ -37,6 +37,7 @@
 
         var player;
         var stars;
+        var bombs;
         var platforms;
         var cursors;
 
@@ -129,8 +130,12 @@
             //Checks for overlap with star and runs collectStar()
             this.physics.add.overlap(player, stars, collectStar, null, this);
 
+            bombs = this.physics.add.group();
+            this.physics.add.collider(bombs, platforms);
+            this.physics.add.collider(player, bombs, hitBomb, null, this);
+
             //16 x 16 is the coordinate to display the text at. 'score: 0' is the default string to display and the object that follows contains a font size and fill color. By not specifying which font we'll actually use the Phaser default, which is Courier.
-            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+            scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
         }
 
         function update() {
@@ -160,6 +165,14 @@
             //10 points are added for every star and the scoreText is updated to show this new total.
             score += 10;
             scoreText.setText('Score: ' + score)
+        }
+
+        function hitBomb (player, bomb)
+        {
+            this.physics.pause(); //Stops physics/game
+            player.setTint(0xff0000); //Colors player red
+            player.anims.play('turn');
+            gameOver = true;
         }
 
     </script>
