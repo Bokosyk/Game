@@ -1,0 +1,120 @@
+{
+	"textures": [
+		{
+			"image": "bones.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 295,
+				"h": 98
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "running_0001",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 86,
+						"h": 99
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 3,
+						"w": 84,
+						"h": 96
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 84,
+						"h": 96
+					},
+					"anchor": {
+						"x": 0.36046512,
+						"y": 0.64646465
+					}
+				},
+				{
+					"filename": "running_0003",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 89,
+						"h": 99
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 4,
+						"w": 89,
+						"h": 95
+					},
+					"frame": {
+						"x": 87,
+						"y": 1,
+						"w": 89,
+						"h": 95
+					},
+					"anchor": {
+						"x": 0.38202247,
+						"y": 0.66666667
+					}
+				},
+				{
+					"filename": "idle_0001",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 48,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 5,
+						"w": 46,
+						"h": 95
+					},
+					"frame": {
+						"x": 178,
+						"y": 1,
+						"w": 46,
+						"h": 95
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.64
+					}
+				},
+				{
+					"filename": "running_0002",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 72,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 9,
+						"w": 68,
+						"h": 91
+					},
+					"frame": {
+						"x": 226,
+						"y": 1,
+						"w": 68,
+						"h": 91
+					},
+					"anchor": {
+						"x": 0.33333333,
+						"y": 0.64
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:e9aed865156737f87033131e7b47fc54:e2b0d0650bd8381b211382fd218c5826:b3b0bcacaed6c0e2de4b93127f6e5ccb$"
+	}
+}

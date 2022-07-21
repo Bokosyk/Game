@@ -28,20 +28,25 @@ var scoreText; //Set up in create function
 
 var game = new Phaser.Game(config);
 
+//Function to create multiple platform sprites based on width
+function addPlatform(x, y, width) {
+    for (i = 0; i < width; i++) {
+        platforms.create(x(i * 64), y, 'ground');
+    }
+}
+
 //Loads assets for game by putting calls to the Phaser Loader inside of Scene function 'preload'
 function preload() {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude',
-        'assets/dude.png',
-        { frameWidth: 32, frameHeight: 48 }
+    this.load.atlas('bones', 'assets/bones.png',
+        'assets/bones.json'
     );
 }
 
 function create() {
-    //Values are the xy coordinates of image. Why 400 and 300? It's because in Phaser 3 all Game Objects are positioned based on their center by default. The background image is 800 x 600 pixels in size, so if we were to display it centered at 0 x 0 you'd only see the bottom-right corner of it. If we display it at 400 x 300 you see the whole thing.
 
     //image layering starts from bottom up. BG typically is on top.
     this.add.image(400, 300, 'sky');
@@ -49,49 +54,41 @@ function create() {
     //Creates new static physics group and assigns it to local variable 'platforms'
     platforms = this.physics.add.staticGroup();
 
-    //Physics group automatically creates physics enabled children using handy helper functions like 'create'
-
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-    // The first line of code above adds a new ground image at 400 x 568 (remember, images are positioned based on their center) - the problem is that we need this platform to span the full width of our game, otherwise the player will just drop off the sides. To do that we scale it x2 with the function setScale(2). It's now 800 x 64 in size, which is perfect for our needs. The call to refreshBody() is required because we have scaled a static physics body, so we have to tell the physics world about the changes we made.
 
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
 
     //PLAYER SECTION
-    player = this.physics.add.sprite(100, 450, 'dude');
+    player = this.physics.add.sprite(100, 450, 'bones', 'idle_0001');
 
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
     this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', {
-            start: 0, end: 3
+        key: 'idle',
+        frames: this.anims.generateFrameNames('bones', {
+            prefix: 'idle_',
+            end: 1,
+            zeroPad: 4
         }),
-        frameRate: 10,
-        repeat: -1
+        repeat: 0
     });
 
     this.anims.create({
-        key: 'turn',
-        frames: [{ key: 'dude', frame: 4 }],
-        frameRate: 20
-    });
-
-    this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', {
-            start: 5, end: 8
+        key: 'running',
+        frames: this.anims.generateFrameNames('bones', {
+            prefix: 'running_',
+            end: 3,
+            zeroPad: 4
         }),
-        frameRate: 10,
         repeat: -1
     });
 
-    //Built in keyboard manager for Phaser. Populates the cursors object with four properties: up, down, left, right. Then all we need to do is poll these in our 'update' loop down below.
+
     cursors = this.input.keyboard.createCursorKeys();
 
-    //setXY - this is used to set the position of the 12 children the Group creates. Each child will be placed starting at x: 12, y: 0 and with an x step of 70. This means that the first child will be positioned at 12 x 0, the second one is 70 pixels on from that at 82 x 0, the third one is at 152 x 0, and so on. The 'step' values are a really handy way of spacing out a Groups children during creation. The value of 70 is chosen because it means all 12 children will be perfectly spaced out across the screen.
     stars = this.physics.add.group({
         key: 'star',
         repeat: 11,
@@ -105,9 +102,8 @@ function create() {
 
     });
 
-    // In order to allow the player to collide with the platforms we can create a Collider object. This object monitors two physics objects (which can include Groups) and checks for collisions or overlap between them. If that occurs it can then optionally invoke your own callback, but for the sake of just colliding with platforms we don't require that:
+
     this.physics.add.collider(player, platforms);
-    //Adds star collision against platforms
     this.physics.add.collider(stars, platforms);
     //Checks for overlap with star and runs collectStar()
     this.physics.add.overlap(player, stars, collectStar, null, this);
@@ -116,22 +112,23 @@ function create() {
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
-    //16 x 16 is the coordinate to display the text at. 'score: 0' is the default string to display and the object that follows contains a font size and fill color. By not specifying which font we'll actually use the Phaser default, which is Courier.
     scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
 }
 
 function update() {
     if (cursors.left.isDown) {
-        player.setVelocityX(-160);
-        player.anims.play('left', true);
+        player.setVelocityX(-180);
+        player.flipX = true;
+        player.anims.play('running', true);
     }
     else if (cursors.right.isDown) {
-        player.setVelocityX(160);
-        player.anims.play('right', true);
+        player.setVelocityX(180);
+        player.flipX = false;
+        player.anims.play('running', true);
     }
     else {
         player.setVelocityX(0);
-        player.anims.play('turn');
+        player.anims.play('idle');
     }
 
     if (cursors.up.isDown && player.body.touching.down) {
