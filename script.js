@@ -83,6 +83,7 @@ function create() {
             end: 3,
             zeroPad: 4
         }),
+        frameRate: 11,
         repeat: -1
     });
 
